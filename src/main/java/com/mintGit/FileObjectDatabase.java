@@ -6,6 +6,8 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileObjectDatabase implements ObjectDatabase {
@@ -24,10 +26,21 @@ public class FileObjectDatabase implements ObjectDatabase {
 
 		try {
 			Files.createDirectories(path.getParent());
+			if (Files.exists(path)) {
+				byte[] bytes = Files.readAllBytes(path);
+				if (Arrays.equals(bytes,obj.compressed())) return;
+				else {
+					throw new IllegalStateException(
+						"对象已存在但内容不一致！可能数据损坏或 SHA-1 碰撞！ID: " + obj.id()
+					);
+				}
+			}
+
 			Files.write(path, obj.compressed(), StandardOpenOption.CREATE_NEW);
 		} catch (IOException e) {
 			throw new UncheckedIOException("写入对象失败: " + obj.id(), e);
 		}
+
 	}
 
 	@Override
