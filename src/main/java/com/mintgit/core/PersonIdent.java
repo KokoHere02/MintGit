@@ -1,4 +1,4 @@
-package com.mintGit.core;
+package com.mintgit.core;
 
 import java.time.Instant;
 import java.time.ZoneId;

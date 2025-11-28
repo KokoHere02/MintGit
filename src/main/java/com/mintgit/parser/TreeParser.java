@@ -1,13 +1,13 @@
-package com.mintGit.parser;
+package com.mintgit.parser;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mintGit.core.ObjectId;
-import com.mintGit.core.Tree;
-import com.mintGit.core.TreeEntry;
+import com.mintgit.core.ObjectId;
+import com.mintgit.core.Tree;
+import com.mintgit.core.TreeEntry;
 
 public class TreeParser {
 

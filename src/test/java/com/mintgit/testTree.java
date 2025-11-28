@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintgit;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,14 +7,14 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import com.mintGit.core.Blob;
-import com.mintGit.core.GitObject;
-import com.mintGit.core.ObjectId;
-import com.mintGit.core.Tree;
-import com.mintGit.core.TreeEntry;
-import com.mintGit.storage.FileObjectDatabase;
-import com.mintGit.storage.ObjectDatabase;
-import com.mintGit.storage.ObjectWriter;
+import com.mintgit.core.Blob;
+import com.mintgit.core.GitObject;
+import com.mintgit.core.ObjectId;
+import com.mintgit.core.Tree;
+import com.mintgit.core.TreeEntry;
+import com.mintgit.storage.FileObjectDatabase;
+import com.mintgit.storage.ObjectDatabase;
+import com.mintgit.storage.ObjectWriter;
 import org.junit.Assert;
 import org.junit.Test;
 

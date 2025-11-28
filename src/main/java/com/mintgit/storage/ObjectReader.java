@@ -1,4 +1,4 @@
-package com.mintGit.storage;
+package com.mintgit.storage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InvalidObjectException;
@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import com.mintGit.core.Blob;
-import com.mintGit.core.GitObject;
-import com.mintGit.parser.CommitParser;
-import com.mintGit.parser.TreeParser;
+import com.mintgit.core.Blob;
+import com.mintgit.core.GitObject;
+import com.mintgit.parser.CommitParser;
+import com.mintgit.parser.TreeParser;
 
 public class ObjectReader {
 

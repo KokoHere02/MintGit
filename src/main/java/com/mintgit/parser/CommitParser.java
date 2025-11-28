@@ -1,4 +1,4 @@
-package com.mintGit.parser;
+package com.mintgit.parser;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.mintGit.core.Commit;
-import com.mintGit.core.ObjectId;
-import com.mintGit.core.PersonIdent;
+import com.mintgit.core.Commit;
+import com.mintgit.core.ObjectId;
+import com.mintgit.core.PersonIdent;
 
 public class CommitParser {
 

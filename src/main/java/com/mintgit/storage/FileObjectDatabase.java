@@ -1,4 +1,4 @@
-package com.mintGit.storage;
+package com.mintgit.storage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,9 +19,9 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 
-import com.mintGit.core.GitObject;
-import com.mintGit.core.ObjectId;
-import com.mintGit.core.StoredObject;
+import com.mintgit.core.GitObject;
+import com.mintgit.core.ObjectId;
+import com.mintgit.core.StoredObject;
 
 public class FileObjectDatabase implements ObjectDatabase {
 

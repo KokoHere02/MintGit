@@ -1,4 +1,4 @@
-package com.mintGit.storage;
+package com.mintgit.storage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,12 +8,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.zip.Deflater;
 
-import com.mintGit.core.Blob;
-import com.mintGit.core.GitObject;
-import com.mintGit.core.ObjectId;
-import com.mintGit.core.StoredObject;
-import com.mintGit.core.Tree;
-import com.mintGit.core.TreeEntry;
+import com.mintgit.core.Blob;
+import com.mintgit.core.GitObject;
+import com.mintgit.core.ObjectId;
+import com.mintgit.core.StoredObject;
+import com.mintgit.core.Tree;
+import com.mintgit.core.TreeEntry;
 
 public class ObjectWriter {
 
