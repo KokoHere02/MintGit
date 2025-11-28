@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintGit.core;
 
 public record StoredObject(
 	ObjectId id,

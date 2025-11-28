@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintGit.core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

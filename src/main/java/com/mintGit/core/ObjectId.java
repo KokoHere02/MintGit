@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintGit.core;
 
 import java.util.Objects;
 
@@ -37,10 +37,10 @@ public record ObjectId(String name) implements Comparable<ObjectId> {
 	 */
 	public byte[] getBytes() {
 		byte[] bytes = new byte[20];
-		for (int i = 0; i < 40; i++) {
-			bytes[i / 2] = (byte) Integer.parseInt(name.substring(i, i + 2), 16) ;
+		for (int i = 0; i < 20; i++) {
+			bytes[i] = (byte) ((Character.digit(name.charAt(i * 2), 16) << 4) |
+				Character.digit(name.charAt(i * 2 + 1), 16));
 		}
-
 		return bytes;
 	}
 

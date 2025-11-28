@@ -1,10 +1,8 @@
-package com.mintGit;
+package com.mintGit.core;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static com.mintGit.ObjectId.*;
 
 /**
  * Git 数据对象。

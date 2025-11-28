@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintGit.core;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

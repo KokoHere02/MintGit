@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintGit.core;
 
 public sealed interface GitObject permits Blob, Tree, Commit {
 

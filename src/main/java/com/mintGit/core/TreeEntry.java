@@ -1,4 +1,4 @@
-package com.mintGit;
+package com.mintGit.core;
 
 /**
  * GIT 子树

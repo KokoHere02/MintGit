@@ -1,6 +1,8 @@
-package com.mintGit;
+package com.mintGit.core;
 
 import java.nio.file.Path;
+
+import com.mintGit.storage.ObjectDatabase;
 
 /**
  * Git 仓库对象。
