@@ -2,7 +2,7 @@ package com.mintgit.exception;
 
 import com.mintgit.core.ObjectId;
 
-public class CorruptObjectException extends RuntimeException {
+public class CorruptObjectException extends MintGitException {
 	private final ObjectId id;
 
 	public CorruptObjectException(ObjectId id, String message) {

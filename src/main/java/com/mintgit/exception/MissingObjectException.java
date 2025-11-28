@@ -2,7 +2,7 @@ package com.mintgit.exception;
 
 import com.mintgit.core.ObjectId;
 
-public class MissingObjectException extends RuntimeException {
+public class MissingObjectException extends MintGitException {
 
 	private final ObjectId id;
 	private final  String typeHint;
