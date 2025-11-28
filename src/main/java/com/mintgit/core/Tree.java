@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.mintgit.exception.StorageException;
+
 /**
  * Git 对象
  */
@@ -39,7 +41,7 @@ public record Tree(List<TreeEntry> entries) implements GitObject {
 			}
 			return body.toByteArray();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new StorageException("TreeEntry serialize Exception", e);
 		}
 
 	}

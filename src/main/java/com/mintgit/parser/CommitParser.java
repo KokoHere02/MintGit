@@ -12,6 +12,7 @@ import java.util.Locale;
 import com.mintgit.core.Commit;
 import com.mintgit.core.ObjectId;
 import com.mintgit.core.PersonIdent;
+import com.mintgit.exception.InvalidObjectIdException;
 
 public class CommitParser {
 
@@ -61,9 +62,9 @@ public class CommitParser {
 		}
 		message = msg.toString();
 
-		if (tree == null) throw new IllegalArgumentException("commit missing tree");
-		if (author == null) throw new IllegalArgumentException("commit missing author");
-		if (committer == null) throw new IllegalArgumentException("commit missing committer");
+		if (tree == null) throw new InvalidObjectIdException("commit missing tree");
+		if (author == null) throw new InvalidObjectIdException("commit missing author");
+		if (committer == null) throw new InvalidObjectIdException("commit missing committer");
 
 		return new Commit(tree, List.copyOf(parents), author, committer, message);
 

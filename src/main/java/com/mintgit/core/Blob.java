@@ -4,6 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.mintgit.exception.InvalidObjectIdException;
+
 /**
  * Git 数据对象。
  */
@@ -41,7 +43,7 @@ public record Blob(byte[] data) implements GitObject {
 			return ObjectId.fromBytes(sha1.digest());
 		}
 		catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new InvalidObjectIdException("<null>");
 		}
 	}
 

@@ -8,6 +8,7 @@ import java.util.List;
 import com.mintgit.core.ObjectId;
 import com.mintgit.core.Tree;
 import com.mintgit.core.TreeEntry;
+import com.mintgit.exception.CorruptObjectException;
 
 public class TreeParser {
 
@@ -34,7 +35,7 @@ public class TreeParser {
 		for (int i = from; i < data.length; i++) {
 			if (data[i] == b) return i;
 		}
-		throw new IllegalArgumentException("invalid tree format");
+		throw new CorruptObjectException("invalid tree format");
 	}
 
 }

@@ -22,6 +22,7 @@ import java.util.zip.Inflater;
 import com.mintgit.core.GitObject;
 import com.mintgit.core.ObjectId;
 import com.mintgit.core.StoredObject;
+import com.mintgit.exception.InvalidPackException;
 
 public class FileObjectDatabase implements ObjectDatabase {
 
@@ -134,10 +135,10 @@ public class FileObjectDatabase implements ObjectDatabase {
 
 		}
 		catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new InvalidPackException(e.getMessage());
 		}
 		catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new AssertionError("SHA-1 not available on this JVM", e);
 		}
 	}
 
@@ -164,7 +165,7 @@ public class FileObjectDatabase implements ObjectDatabase {
 			}
 		}
 		catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new InvalidPackException(e.getMessage());
 		}
 
 	}

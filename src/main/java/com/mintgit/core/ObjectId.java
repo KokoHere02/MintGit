@@ -2,6 +2,9 @@ package com.mintgit.core;
 
 import java.util.Objects;
 
+import com.mintgit.exception.InvalidObjectIdException;
+import com.mintgit.exception.ObjectChecksumException;
+
 /**
  * sha1加密后的唯一Id
  */
@@ -9,8 +12,8 @@ public record ObjectId(String name) implements Comparable<ObjectId> {
 
 	public ObjectId {
 		Objects.requireNonNull(name, "name must not be null");
-		if (name.length() != 40) throw new IllegalArgumentException("必须40位");
-		if (!name.matches("[0-9a-f]{40}")) throw new IllegalArgumentException("必须小写十六进制");
+		if (name.length() != 40) throw new InvalidObjectIdException(name);
+		if (!name.matches("[0-9a-f]{40}")) throw new InvalidObjectIdException(name);
 	}
 
 	/**
@@ -20,7 +23,7 @@ public record ObjectId(String name) implements Comparable<ObjectId> {
 	 */
 	public static ObjectId fromBytes(byte[] sha1Bytes) {
 		if (sha1Bytes == null || sha1Bytes.length < 20) {
-			throw new IllegalArgumentException("SHA-1 必须是 20 字节");
+			throw new InvalidObjectIdException("<null>");
 		}
 
 		StringBuilder sb = new StringBuilder(20);

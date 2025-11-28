@@ -14,6 +14,8 @@ import com.mintgit.core.ObjectId;
 import com.mintgit.core.StoredObject;
 import com.mintgit.core.Tree;
 import com.mintgit.core.TreeEntry;
+import com.mintgit.exception.CorruptObjectException;
+import com.mintgit.exception.ObjectChecksumException;
 
 public class ObjectWriter {
 
@@ -44,7 +46,7 @@ public class ObjectWriter {
 			out.write(header.getBytes(StandardCharsets.UTF_8));
 			out.write(raw);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new CorruptObjectException(obj.id(), e.getMessage());
 		}
 
 		byte[] fullData = out.toByteArray();                     // 先拿到未压缩的完整数据
@@ -85,7 +87,7 @@ public class ObjectWriter {
 			return sha1.digest();
 
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new AssertionError("SHA-1 not available on this JVM", e);
 		}
 	}
 

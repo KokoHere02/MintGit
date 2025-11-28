@@ -9,6 +9,7 @@ import java.util.zip.Inflater;
 
 import com.mintgit.core.Blob;
 import com.mintgit.core.GitObject;
+import com.mintgit.exception.CorruptObjectException;
 import com.mintgit.parser.CommitParser;
 import com.mintgit.parser.TreeParser;
 
@@ -28,10 +29,9 @@ public class ObjectReader {
 				default -> throw new IllegalArgumentException("Unknown type " + type);
 			};
 		} catch (InvalidObjectException e) {
-			throw new RuntimeException(e);
+			throw new CorruptObjectException(e.getMessage());
 		}
 	}
-
 
 	private static byte[] decompress(byte[] compressed) {
 		Inflater inflater = new Inflater(true);
@@ -49,18 +49,17 @@ public class ObjectReader {
 			}
 			return boas.toByteArray();
 
-		}
-		catch (DataFormatException e) {
-			throw new IllegalStateException("zlib 解压失败，对象可能损坏", e);
-		}
-		finally {
+		} catch (DataFormatException e) {
+			throw new CorruptObjectException("zlib 解压失败，对象可能损坏" + e.getMessage());
+		} finally {
 			inflater.end();
 		}
 
 	}
 
 	private int findNul(byte[] data) throws InvalidObjectException {
-		for(int i = 0; i < data.length; i++) if (data[i] == 0) return i;
+		for (int i = 0; i < data.length; i++) if (data[i] == 0) return i;
 		throw new InvalidObjectException("no nul byte");
 	}
+
 }
