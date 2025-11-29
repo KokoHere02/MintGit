@@ -11,18 +11,18 @@ import java.util.zip.Deflater;
 import com.mintgit.core.Blob;
 import com.mintgit.core.GitObject;
 import com.mintgit.core.ObjectId;
+import com.mintgit.core.Repository;
 import com.mintgit.core.StoredObject;
 import com.mintgit.core.Tree;
 import com.mintgit.core.TreeEntry;
 import com.mintgit.exception.CorruptObjectException;
-import com.mintgit.exception.ObjectChecksumException;
 
 public class ObjectWriter {
 
 	private final ObjectDatabase db;
 
-	public ObjectWriter(ObjectDatabase db) {
-		this.db = db;
+	public ObjectWriter(Repository repo) {
+		this.db = repo.getObjects();
 	}
 
 	private static final ThreadLocal<Deflater> DEFLATER_CACHE =

@@ -6,14 +6,17 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.MissingFormatArgumentException;
+import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -21,17 +24,22 @@ import java.util.zip.Inflater;
 
 import com.mintgit.core.GitObject;
 import com.mintgit.core.ObjectId;
+import com.mintgit.core.Repository;
 import com.mintgit.core.StoredObject;
+import com.mintgit.exception.CorruptObjectException;
+import com.mintgit.exception.GitRepositoryException;
 import com.mintgit.exception.InvalidPackException;
 
 public class FileObjectDatabase implements ObjectDatabase {
 
 	private final Path objectsDir;       // .git/objects
+	private final Repository repo;
 	private final ObjectReader reader = new ObjectReader();
 
 
-	public FileObjectDatabase(Path objectsDir) {
-		this.objectsDir = objectsDir;
+	public FileObjectDatabase(Repository repository) {
+		this.objectsDir = repository.getGitDir().resolve("objects");
+		this.repo = repository;
 	}
 
 	@Override
@@ -140,6 +148,62 @@ public class FileObjectDatabase implements ObjectDatabase {
 		catch (NoSuchAlgorithmException e) {
 			throw new AssertionError("SHA-1 not available on this JVM", e);
 		}
+	}
+
+	@Override
+	public Optional<ObjectId> findByPrefix(String prefix) {
+		if (prefix == null ||  prefix.isEmpty()) return Optional.empty();
+
+		prefix = prefix.toLowerCase();
+		if (prefix.length() > 40) throw new IllegalArgumentException("prefix too long: " + prefix);
+
+		if (prefix.length() == 40) {
+			ObjectId id = ObjectId.fromString(prefix);
+			return exists(id) ? Optional.of(id) : Optional.empty();
+		}
+		String dir = prefix.substring(0, 2);
+		Path looseDir = objectsDir.resolve(dir);
+		if (Files.isDirectory(looseDir)) {
+
+			String fileName = prefix.substring(2);
+			List<ObjectId> candidates = new ArrayList<>();
+
+			try (DirectoryStream<Path> stream = Files.newDirectoryStream(looseDir)) {
+				for (Path file : stream) {
+					String name = file.getFileName().toString();
+					if (name.startsWith(fileName)) {
+						ObjectId objectId = ObjectId.fromString(dir + name);
+						candidates.add(objectId);
+					}
+				}
+			}
+			catch (IOException e) {
+				throw new CorruptObjectException("read path: " + looseDir + "Exception. it CorruptObject" +
+					" System message"+ e.getMessage());
+			}
+			if (candidates.size() == 1) {
+				return Optional.of(candidates.get(0));
+			}
+
+			if (candidates.size() > 1) {
+				throw new GitRepositoryException(prefix + "has more than one matching prefix :" + candidates);
+			}
+		}
+
+		// todo 再查 pack 文件（如果你已经实现 pack 索引）
+
+		return Optional.empty();
+	}
+
+	@Override
+	public boolean exists(ObjectId id) {
+		Path loosePath = loosePath(id);  // 你之前已经写好的方法
+		if (Files.isRegularFile(loosePath)) {
+			return true;
+		}
+
+		// todo 再查 pack 文件（如果你已经实现 pack 索引）
+		return false;
 	}
 
 	private int typeToCode(String type) {

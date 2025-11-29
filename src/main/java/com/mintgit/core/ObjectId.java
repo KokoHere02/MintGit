@@ -1,9 +1,11 @@
 package com.mintgit.core;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import com.mintgit.exception.InvalidObjectIdException;
-import com.mintgit.exception.ObjectChecksumException;
+import com.mintgit.utils.RawParseUtils;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * sha1加密后的唯一Id
@@ -45,6 +47,33 @@ public record ObjectId(String name) implements Comparable<ObjectId> {
 				Character.digit(name.charAt(i * 2 + 1), 16));
 		}
 		return bytes;
+	}
+
+	public static boolean isValidHex(@Nullable String id) {
+		try {
+			for (char c : id.toCharArray()) {
+				if (RawParseUtils.parseHexInt4((byte)c) == -1) return false;
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static ObjectId fromString(String hex) {
+		if (hex == null) throw new InvalidObjectIdException("null");
+		hex = hex.toLowerCase(Locale.ROOT);
+
+		if (hex.length() == 40 && isValidHex(hex)) {
+			byte[] bytes = RawParseUtils.parseObjectId(hex);
+			return fromBytes(bytes);
+		}
+
+		throw new InvalidObjectIdException(hex);
+	}
+
+	public boolean exists(String name) {
+		return find(name) != null;
 	}
 
 	public boolean startsWith(String prefix) {
