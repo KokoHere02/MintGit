@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public record ObjectId(String name) implements Comparable<ObjectId> {
 
+	private static final ObjectId ZERO_ID = null;
+
 	public ObjectId {
 		Objects.requireNonNull(name, "name must not be null");
 		if (name.length() != 40) throw new InvalidObjectIdException(name);
@@ -72,10 +74,6 @@ public record ObjectId(String name) implements Comparable<ObjectId> {
 		throw new InvalidObjectIdException(hex);
 	}
 
-	public boolean exists(String name) {
-		return find(name) != null;
-	}
-
 	public boolean startsWith(String prefix) {
 		return name.startsWith(prefix);
 	}
@@ -84,5 +82,7 @@ public record ObjectId(String name) implements Comparable<ObjectId> {
 	public int compareTo(ObjectId o) {
 		return 0;
 	}
+
+	public static ObjectId zeroId() { return ZERO_ID; }
 
 }
