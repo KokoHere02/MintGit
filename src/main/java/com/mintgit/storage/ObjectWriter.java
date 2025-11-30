@@ -22,7 +22,7 @@ public class ObjectWriter {
 	private final ObjectDatabase db;
 
 	public ObjectWriter(Repository repo) {
-		this.db = repo.getObjects();
+		this.db = repo.getObjectDatabase();
 	}
 
 	private static final ThreadLocal<Deflater> DEFLATER_CACHE =
@@ -89,6 +89,17 @@ public class ObjectWriter {
 		} catch (NoSuchAlgorithmException e) {
 			throw new AssertionError("SHA-1 not available on this JVM", e);
 		}
+	}
+
+	public static byte[] withHeader(String type, byte[] content) {
+		String header = type + " " + content.length + "\0";
+		byte[] headerBytes = header.getBytes(StandardCharsets.UTF_8);
+
+		byte[] fullData = new byte[headerBytes.length + content.length];
+		System.arraycopy(headerBytes, 0, fullData, 0, headerBytes.length);
+		System.arraycopy(content, 0, fullData, headerBytes.length, content.length);
+
+		return fullData;
 	}
 
 }
