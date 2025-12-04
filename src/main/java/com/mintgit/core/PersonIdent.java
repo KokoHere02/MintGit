@@ -3,9 +3,14 @@ package com.mintgit.core;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public record PersonIdent(String name, String email, Instant when, ZoneId zone) {
+
+	private static final Pattern PERSON_IDENT_PATTERN = Pattern.compile(
+		"^(.+?)\\s+<([^>]+)>\\s+(\\d+)\\s+([+-]\\d{4}|Z)$"
+	);
 
 	public String format() {
 		ZoneOffset offset = zone.getRules().getOffset(when);
@@ -26,12 +31,15 @@ public record PersonIdent(String name, String email, Instant when, ZoneId zone) 
 
 	public static PersonIdent parse(String line) {
 		// "Alice <alice@example.com> 1739250000 +0800"
-		var matcher = Pattern.compile("(.*) <(.*?)> (\\\\d+) ([-+Z]\\\\S+)").matcher(line);
+		Matcher m = PERSON_IDENT_PATTERN.matcher(line.strip());
+		if (!m.matches()) {
+			throw new IllegalArgumentException("Invalid PersonIdent format: " + line);
+		}
 
-		String name = matcher.group(1);
-		String email = matcher.group(2);
-		Instant when = Instant.ofEpochSecond(Long.parseLong(matcher.group(3)));
-		String tz = matcher.group(4);
+		String name = m.group(1);
+		String email = m.group(2);
+		Instant when = Instant.ofEpochSecond(Long.parseLong(m.group(3)));
+		String tz = m.group(4);
 
 		ZoneId zone = tz.equals("Z")
 			? ZoneOffset.UTC
