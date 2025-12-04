@@ -13,8 +13,12 @@ import com.mintgit.core.Commit;
 import com.mintgit.core.ObjectId;
 import com.mintgit.core.PersonIdent;
 import com.mintgit.exception.InvalidObjectIdException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommitParser {
+
+	private static final Logger logger = LoggerFactory.getLogger(CommitParser.class);
 
 	private static final DateTimeFormatter GIT_DATE_FORMAT = DateTimeFormatter.ofPattern(
 		"EEE MMM ppd HH:mm:ss yyyy Z", Locale.ENGLISH);
@@ -51,15 +55,14 @@ public class CommitParser {
 				case "author" -> author = parsePerson(value);
 			}
 			i++;
-
 		}
 
 		StringBuilder msg = new StringBuilder();
-		while (i < lines.length) {
-			msg.append(lines[i]);
-			if (i < lines.length - 1) msg.append('\n');
-			i++;
-		}
+//		while (i < lines.length) {
+//			msg.append(lines[i]);
+//			if (i < lines.length - 1) msg.append('\n');
+//			i++;
+//		}
 		message = msg.toString();
 
 		if (tree == null) throw new InvalidObjectIdException("commit missing tree");
@@ -67,7 +70,6 @@ public class CommitParser {
 		if (committer == null) throw new InvalidObjectIdException("commit missing committer");
 
 		return new Commit(tree, List.copyOf(parents), author, committer, message);
-
 	}
 
 	private static PersonIdent parsePerson(String s) {
@@ -79,6 +81,7 @@ public class CommitParser {
 		int timeStart = s.lastIndexOf(' ',gt + 2);
 
 		if (lt == -1 || gt == -1 || timeStart == -1) {
+			logger.error("email Incorrect format :{}", s);
 			throw new IllegalArgumentException("Invalid person string: " + s);
 		}
 

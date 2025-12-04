@@ -7,8 +7,12 @@ import com.mintgit.core.Ref;
 import com.mintgit.core.Repository;
 import com.mintgit.core.Tag;
 import com.mintgit.exception.GitRepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RevWalk implements AutoCloseable{
+
+	private static final Logger logger = LoggerFactory.getLogger(RevWalk.class);
 
 	@Override
 	public void close() throws Exception {
@@ -39,6 +43,7 @@ public class RevWalk implements AutoCloseable{
 			parseAncestor(rev);
 		}
 
+		logger.error("No matching sh1 found id:{}", rev);
 		throw new GitRepositoryException("unknown revision: " + rev);
 
 	}

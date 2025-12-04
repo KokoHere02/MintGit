@@ -29,12 +29,16 @@ import com.mintgit.core.StoredObject;
 import com.mintgit.exception.CorruptObjectException;
 import com.mintgit.exception.GitRepositoryException;
 import com.mintgit.exception.InvalidPackException;
+import com.mintgit.parser.CommitParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileObjectDatabase implements ObjectDatabase {
 
 	private final Path objectsDir;       // .git/objects
 	private final Repository repo;
 	private final ObjectReader reader = new ObjectReader();
+	private static final Logger logger = LoggerFactory.getLogger(FileObjectDatabase.class);
 
 
 	public FileObjectDatabase(Repository repository) {
@@ -54,6 +58,7 @@ public class FileObjectDatabase implements ObjectDatabase {
 				byte[] bytes = Files.readAllBytes(path);
 				if (Arrays.equals(bytes,obj.compressed())) return;
 				else {
+					logger.error("Data corruption data: {}", obj);
 					throw new IllegalStateException(
 						"对象已存在但内容不一致！可能数据损坏或 SHA-1 碰撞！ID: " + obj.id()
 					);
@@ -63,6 +68,7 @@ public class FileObjectDatabase implements ObjectDatabase {
 			Files.write(path, obj.compressed(), StandardOpenOption.CREATE_NEW);
 		}
 		catch (IOException e) {
+			logger.error("write data error id: {}, message: {}", obj.id(), e.getMessage());
 			throw new UncheckedIOException("写入对象失败: " + obj.id(), e);
 		}
 
@@ -82,7 +88,8 @@ public class FileObjectDatabase implements ObjectDatabase {
 
 		}
 		catch (IOException e) {
-			throw new RuntimeException(e);
+			logger.error("read file error: {}, message: {}", id, e.getMessage());
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -105,6 +112,7 @@ public class FileObjectDatabase implements ObjectDatabase {
 
 		}
 		catch (DataFormatException e) {
+			logger.error("zlib Unzip error message: {}", e.getMessage());
 			throw new IllegalStateException("zlib 解压失败，对象可能损坏", e);
 		}
 		finally {
@@ -143,6 +151,7 @@ public class FileObjectDatabase implements ObjectDatabase {
 
 		}
 		catch (IOException e) {
+			logger.error("unknow error: {}", e.getMessage());
 			throw new InvalidPackException(e.getMessage());
 		}
 		catch (NoSuchAlgorithmException e) {
