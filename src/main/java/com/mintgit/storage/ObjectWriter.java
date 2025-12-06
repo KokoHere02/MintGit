@@ -3,6 +3,8 @@ package com.mintgit.storage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -30,6 +32,15 @@ public class ObjectWriter {
 
 	public ObjectId writeBlob(byte[] data) {
 		return write(new Blob(data));
+	}
+
+	public ObjectId writeBlob(Path path) {
+		try {
+			byte[] bytes = Files.readAllBytes(path);
+			return writeBlob(bytes);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public ObjectId writeTree(List<TreeEntry> entries) {

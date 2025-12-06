@@ -28,6 +28,10 @@ public class Repository implements AutoCloseable{
 	private final ObjectReader objectReader;
 	private final ObjectWriter objectWriter;
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	private Repository(Builder builder) {
 		this.gitDir = builder.getDir.toAbsolutePath().normalize();
 		this.workTree = builder.workTree;
@@ -72,6 +76,39 @@ public class Repository implements AutoCloseable{
 		}
 		throw new  GitRepositoryException("Not a directory: " + start);
 	}
+
+	public Repository init(String dir) {
+		if (dir == null || dir.isEmpty()) {
+			dir = System.getProperty("user.dir");
+		}
+
+		try {
+			Path gitDir = Path.of(dir).resolve(".git");
+			Files.createDirectories(gitDir);
+
+			// directories
+			Files.createDirectories(gitDir.resolve("hooks"));
+			Files.createDirectories(gitDir.resolve("info"));
+			Files.createDirectories(gitDir.resolve("objects/info"));
+			Files.createDirectories(gitDir.resolve("objects/pack"));
+			Files.createDirectories(gitDir.resolve("refs/heads"));
+			Files.createDirectories(gitDir.resolve("refs/tags"));
+
+			// files
+			Files.writeString(gitDir.resolve("HEAD"), "ref: refs/heads/master\n");
+			Files.writeString(gitDir.resolve("config"),
+				"[core]\n\trepositoryformatversion = 0\n\tfilemode = false\n");
+
+			Files.writeString(gitDir.resolve("description"),
+				"Unnamed repository; edit this file 'description' to name the repository.\n");
+
+			return Repository.builder().setGitDir(gitDir).setWorkTree(gitDir.getParent()).build();
+
+		} catch (IOException e) {
+			throw new GitRepositoryException("Failed to create .git directory: " + dir, e);
+		}
+	}
+
 
 	public static class Builder{
 		private Path getDir;
